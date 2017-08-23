@@ -5,14 +5,14 @@
                   <li class="active">Personal Detail</li>
                   <li>Education Data</li>
                   <li>Other Information</li>
-                  <li>File Upload</li>
+                  <li>Duration & File Upload</li>
               </ul>
                     
               <!-- fieldsets -->
               <fieldset>
                 <span onclick="document.getElementById('id01').style.display='none'" class="w3-closebtn w3-padding-top">&times;</span>
                 <h2 class="fs-title">Personal Detail</h2>
-                <h3 class="fs-subtitle">This is step 1</h3>
+                <h3 class="fs-subtitle">Form Update Step One</h3>
                         
                 <div class="w3-row-padding w3-center w3-margin-top">
  
@@ -92,7 +92,7 @@
                     <div >
                                             <!--<h4>E-mail Management</h4><br>-->
                         <input type="hidden" name="contact_id" value="" size="32" /> 
-                        <input type="hidden" name="s_id" value="<?php echo $row_studentSet['s_id']+1?>" size="32" />                                       
+                        <input type="hidden" name="scd_s_id" value="<?php echo $row_studentSet['s_id']+1?>" size="32" />                                       
                         <div align="left">
                       	<label for="contact_no"> Tel : </label>
                       	</div>
@@ -137,7 +137,7 @@
                           <div class="w3-third">
                             <div>   
                                
-								<input type="hidden" name="emc_id" value="" size="32" />
+								            <input type="hidden" name="emc_id" value="" size="32" />
                         		<input type="hidden" name="contact_id" value="<?php echo $row_stu_contactSet['contact_id']+1?>" size="32" />
                                 <div align="left">
                                 <label for="emc_fname"> First Name : </label>
@@ -180,7 +180,24 @@
                           <div class="w3-third">
                             <div>
                                 <input type="hidden" name="address_Id" value="" size="32" />
-                                <input type="hidden" name="s_id" value="<?php echo $row_studentSet['s_id']+1?>" size="32" />         
+                                <input type="hidden" name="s_id" value="<?php echo $row_studentSet['s_id']+1?>" size="32" /> 
+                                <div align="left">
+                                <label for="place_name"> Number : </label> 
+                                </div>
+                                <input type="text" name="no" value="" size="32"  placeholder="108/24 Moo 19"/>  
+                                <div align="left">  
+                                <label for="sub_district"> Sub-district : </label>                 
+                                </div> 
+                                <input type="text" name="sub_district" value="" size="32" placeholder="Jhumphol"/> 
+                                <div align="left">
+                                <label for="province_name"> Province : </label> 
+                                </div>
+                                <input type="text" name="province_name" value="" size="32" placeholder="Nong Khai"/>     
+                                                                                           
+                            </div>
+                          </div>
+                          <div class="w3-third">
+                            <div >   
                                 <div align="left">
                                 <label for="place_name"> Place/Village : </label> 
                                 </div>
@@ -190,15 +207,16 @@
                                  </div>
                                 <input type="text" name="district" value="" size="32" placeholder="Phonphisai"/>
                                 <div align="left">
-                                <label for="province_name"> Province : </label> 
+                                <label for="zip_code"> Zip Code/Post : </label> 
                                 </div>
-                                <input type="text" name="province_name" value="" size="32" placeholder="Nong Khai"/>
+                                <input type="text" name="zip_code" value="" size="32" placeholder="43120"/> 
+  
                             </div>
-                          </div>
+                          </div>          
                           <div class="w3-third">
-                            <div >                              
+                            <div >                                                 
                                 <div align="left">
-                                <label for="road_name"> Road/Street : </label>                      	
+                                <label for="road_name"> Road/Street : </label>                    
                                 </div> 
                                 <input type="text" name="road_name" value="" size="32" placeholder="N/A"/>
                                 <div align="left">
@@ -208,19 +226,18 @@
                                 <div align="left">
                                 <label for="country_id"> Country : </label> 
                                 </div>
-                                <input type="text" name="country_id" value="" size="32" placeholder="Thailand"/>   
-                            </div>
-                          </div>          
-                          <div class="w3-third">
-                            <div >                                                 
-                                <div align="left">  
-                                <label for="sub_district"> Sub-district : </label>                    
-                                </div> 
-                                <input type="text" name="sub_district" value="" size="32" placeholder="Jhumphol"/>
-                                <div align="left">
-                                <label for="zip_code"> Zip Code/Post : </label> 
-                                </div>
-                                <input type="text" name="zip_code" value="" size="32" placeholder="43120"/>     
+                                <select name="country_id" style="width: 100%;">
+                                  <?php do {  ?>
+                                    <option  name="country_id" value="<?php echo $row_countrySet['country_id']?>"><?php echo $row_countrySet['country_name']?></option>
+                                    <?php
+                                        } while ($row_countrySet = mysqli_fetch_assoc($countrySet));
+                                          $rows = mysqli_num_rows($countrySet);
+                                          if($rows > 0) {
+                                          mysqli_data_seek($countrySet, 0);
+                                          $row_countrySet = mysqli_fetch_assoc($countrySet);
+                                          }
+                                    ?>
+                                </select>                                    
                             </div>
                           </div>
                         </div>
@@ -643,7 +660,7 @@ test-->
               
               <fieldset>
                 <span onclick="document.getElementById('id01').style.display='none'" class="w3-closebtn w3-padding-top">&times;</span>
-                <h2 class="fs-title">Eiei</h2>
+                <h2 class="fs-title">Duration & Files Upload</h2>
                 <div align="center">
                     <h3 class="fs-subtitle" >
                         <table>
