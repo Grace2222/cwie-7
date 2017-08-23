@@ -66,9 +66,9 @@ if (isset($_SERVER['QUERY_STRING'])) {
 							   GetSQLValueString($_POST['uni_id'], "int"),
 							   GetSQLValueString($_POST['collage_id'], "int"));
 	
-	$insertSQL_sct = sprintf("INSERT INTO student_contact_details (contact_id, s_id, contact_no, email_adress) VALUES (%s, %s, %s, %s)",
+	$insertSQL_sct = sprintf("INSERT INTO student_contact_details (contact_id, scd_s_id, contact_no, email_adress) VALUES (%s, %s, %s, %s)",
 							   GetSQLValueString($_POST['contact_id'], "int"),
-							   GetSQLValueString($_POST['s_id'], "int"),
+							   GetSQLValueString($_POST['scd_s_id'], "int"),
 							   GetSQLValueString($_POST['contact_no'], "text"),
 							   GetSQLValueString($_POST['email_adress'], "text"));
 		
@@ -88,9 +88,10 @@ if (isset($_SERVER['QUERY_STRING'])) {
 							   GetSQLValueString($_POST['emc_contact'], "text"),
 							   GetSQLValueString($_POST['contact_id'], "int"));
 	
-	$insertSQL_sad = sprintf("INSERT INTO student_address (address_Id, s_id, place_name, road_name, sub_district, district, city, zip_code, province_name, country_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	$insertSQL_sad = sprintf("INSERT INTO student_address (address_Id, s_id, no, place_name, road_name, sub_district, district, city, zip_code, province_name, country_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 							   GetSQLValueString($_POST['address_Id'], "int"),
 							   GetSQLValueString($_POST['s_id'], "int"),
+							   GetSQLValueString($_POST['no'], "text"),
 							   GetSQLValueString($_POST['place_name'], "text"),
 							   GetSQLValueString($_POST['road_name'], "text"),
 							   GetSQLValueString($_POST['sub_district'], "text"),
@@ -153,14 +154,14 @@ if (isset($_SERVER['QUERY_STRING'])) {
                        GetSQLValueString($_POST['student_info_s_id'], "int"));
   
 		  mysqli_select_db($MyConnect, $database_MyConnect);
-		  $Result1_stu = mysqli_query($MyConnect, $insertSQL_stu) or die(mysqli_error());
+		  $Result1_stu = mysqli_query($MyConnect, $insertSQL_stu) or die(mysqli_error($MyConnect));
 		  $Result1_edt = mysqli_query($MyConnect, $insertSQL_edt) or die(mysqli_error());
-		  $Result1_sct = mysqli_query($MyConnect, $insertSQL_sct) or die(mysqli_error());
+		  $Result1_sct = mysqli_query($MyConnect, $insertSQL_sct) or die(mysqli_error($MyConnect));
 		  $Result1_app = mysqli_query($MyConnect, $insertSQL_app) or die(mysqli_error());
 		  $Result1_sec = mysqli_query($MyConnect, $insertSQL_sec) or die(mysqli_error());
 		  $Result1_sad = mysqli_query($MyConnect, $insertSQL_sad) or die(mysqli_error());	
 		  $Result1_sre = mysqli_query($MyConnect, $insertSQL_sre) or die(mysqli_error());
-		  $Result1_ebg = mysqli_query($MyConnect, $insertSQL_ebg) or die(mysqli_error());
+		  $Result1_ebg = mysqli_query($MyConnect, $insertSQL_ebg) or die(mysqli_error($MyConnect));
 		  
 		  $Result1_vdo = mysqli_query($MyConnect, $insertSQL_vdo) or die(mysqli_error());
 		  $Result1_res = mysqli_query($MyConnect, $insertSQL_res) or die(mysqli_error());	  
@@ -191,18 +192,16 @@ if (isset($_SERVER['QUERY_STRING'])) {
 		$startRow_studentSet = $pageNum_studentSet * $maxRows_studentSet;
 		
 		mysqli_select_db($MyConnect,$database_MyConnect);
-			$query_studentSet = "SELECT student_info.s_id, title.title_name, student_info.s_fname, student_info.s_lname, student_status.status_desc, major_info.major_name, degree_info.degree_name, university_info.uni_name, collage_info.collage_name
+			$query_studentSet = "SELECT student_info.s_id, title.title_name, student_info.s_fname, student_info.s_lname, student_status.status_desc, major_info.major_name, degree_info.degree_name
 			FROM student_info
 			INNER JOIN title ON title.title_id = student_info.title_title_id
 			INNER JOIN student_status ON student_status.status_id = student_info.status_id
 			LEFT JOIN education_info ON student_info.s_id = education_info.s_id
 			LEFT JOIN major_info ON major_info.major_id = education_info.major_id
 			LEFT JOIN degree_info ON degree_info.degree_id = education_info.degree_id
-			LEFT JOIN university_info ON university_info.uni_id = education_info.uni_id
-			LEFT JOIN collage_info ON collage_info.collage_id = education_info.collage_id
 			ORDER BY student_info.s_id DESC";
 		$query_limit_studentSet = sprintf("%s LIMIT %d, %d", $query_studentSet, $startRow_studentSet, $maxRows_studentSet);
-		$studentSet = mysqli_query($MyConnect, $query_limit_studentSet) or die(mysqli_error());
+		$studentSet = mysqli_query($MyConnect, $query_limit_studentSet) or die(mysqli_error($MyConnect));
 		$row_studentSet = mysqli_fetch_assoc($studentSet);
 		
 		if (isset($_GET['totalRows_studentSet'])) {
@@ -231,18 +230,14 @@ if (isset($_SERVER['QUERY_STRING'])) {
 		$queryString_studentSet = sprintf("&totalRows_studentSet=%d%s", $totalRows_studentSet, $queryString_studentSet);
 
 		
-$maxRows_countrySet = 10;
-$pageNum_countrySet = 0;
-if (isset($_GET['pageNum_countrySet'])) {
-  $pageNum_countrySet = $_GET['pageNum_countrySet'];
-}
-$startRow_countrySet = $pageNum_countrySet * $maxRows_countrySet;
+
 
 mysqli_select_db($MyConnect, $database_MyConnect);
 $query_countrySet = "SELECT * FROM country_list";
-$query_limit_countrySet = sprintf("%s LIMIT %d, %d", $query_countrySet, $startRow_countrySet, $maxRows_countrySet);
-$countrySet = mysqli_query($MyConnect, $query_limit_countrySet) or die(mysqli_error());
+$countrySet = mysqli_query($MyConnect, $query_countrySet) or die(mysqli_error());
 $row_countrySet = mysqli_fetch_assoc($countrySet);
+$totalRows_countrySet = mysqli_num_rows($countrySet); 
+
 
 /*if (isset($_GET['totalRows_countrySet'])) {
   $totalRows_countrySet = $_GET['totalRows_countrySet'];
@@ -270,12 +265,13 @@ $query_majorSet = "SELECT * FROM major_info";
 $majorSet = mysqli_query($MyConnect, $query_majorSet) or die(mysqli_error());
 $row_majorSet = mysqli_fetch_assoc($majorSet);
 $totalRows_majorSet = mysqli_num_rows($majorSet);
-
+/*
 mysqli_select_db($MyConnect, $database_MyConnect);
 $query_resumeSet = "SELECT resume_name FROM resume";
-$resumeSet = mysqli_query($MyConnect, $query_resumeSet) or die(mysqli_error());
+$resumeSet = mysqli_query($MyConnect, $query_resumeSet) or die(mysqli_error($MyConnect));
 $row_resumeSet = mysqli_fetch_assoc($resumeSet);
-$totalRows_resumeSet = mysqli_num_rows($resumeSet);
+$totalRows_resumeSet = mysqli_num_rows($resumeSet); 
+*/
 
 mysqli_select_db($MyConnect, $database_MyConnect);
 $query_RecordsetStudentInfo = "SELECT * FROM `application`";
@@ -304,12 +300,9 @@ $educationSet = mysqli_query($MyConnect, $query_educationSet) or die(mysqli_erro
 $row_educationSet = mysqli_fetch_assoc($educationSet);
 $totalRows_educationSet = mysqli_num_rows($educationSet);
 
-mysqli_select_db($MyConnect, $database_MyConnect);
-$query_instituteSet = "SELECT * FROM intitute_type";
-$instituteSet = mysqli_query($MyConnect, $query_instituteSet) or die(mysqli_error());
-$row_instituteSet = mysqli_fetch_assoc($instituteSet);
-$totalRows_instituteSet = mysqli_num_rows($instituteSet);
+//mysqli_select_db($MyConnect, $database_MyConnect);
 
+/*
 mysqli_select_db($MyConnect, $database_MyConnect);
 $query_universitySet = "SELECT * FROM university_info";
 $universitySet = mysqli_query($MyConnect, $query_universitySet) or die(mysqli_error());
@@ -321,6 +314,7 @@ $query_collageSet = "SELECT * FROM collage_info";
 $collageSet = mysqli_query($MyConnect, $query_collageSet) or die(mysqli_error());
 $row_collageSet = mysqli_fetch_assoc($collageSet);
 $totalRows_collageSet = mysqli_num_rows($collageSet);
+*/
 
 /*mysqli_select_db($MyConnect, $database_MyConnect);
 $query_studentSet = "SELECT * FROM student_info";
@@ -422,6 +416,9 @@ $queryString_countrySet = sprintf("&totalRows_countrySet=%d%s", $totalRows_count
   $Result1 = mysqli_query($insertSQL, $MyConnect) or die(mysqli_error());
 
 }*/	
+
+
+
 ?>
 
 
